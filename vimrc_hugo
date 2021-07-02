@@ -1,0 +1,196 @@
+call plug#begin('~/.vim/plugged')
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'preservim/nerdtree'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'jeetsukumaran/vim-pythonsense'
+Plug 'jiangmiao/auto-pairs'
+Plug 'sheerun/vim-polyglot'
+Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'dense-analysis/ale'
+Plug 'jistr/vim-nerdtree-tabs'
+Plug 'MikeCoder/quickrun.vim'
+Plug 'vim-test/vim-test'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'tell-k/vim-autopep8'
+Plug 'zchee/deoplete-jedi'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'Shougo/echodoc.vim'
+Plug 'preservim/nerdcommenter'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'deoplete-plugins/deoplete-jedi'
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make' }
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'justinmk/vim-sneak'
+Plug 'jpalardy/vim-slime'
+Plug 'mfussenegger/nvim-dap-python'
+
+" Initialize plugin system
+call plug#end()
+
+" VIM Sneak Code
+let g:sneak#label = 1
+nmap f <Plug>Sneak_s
+nmap F <Plug>Sneak_S
+
+let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
+let g:airline#extensions#tabline#formatter = 'default'  " f/p/file-name.js
+let g:airline#extensions#tabline#formatter = 'jsformatter' " path-to/f
+let g:airline#extensions#tabline#formatter = 'unique_tail' " file-name.js
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved' " f/p/file-name.js
+let g:airline_theme='tomorrow'
+
+"Vim Slime copy code
+let g:slime_target = "tmux"
+let g:slime_python_ipython = 1
+
+let g:autopep8_disable_show_diff=1
+let g:autopep8_on_save = 1
+
+noremap <silent> <C-S>          :update<CR>
+
+let g:indent_guides_enable_on_vim_startup = 1
+
+
+autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
+
+" Ensure Ale can use linters for appropriate languages
+let g:ale_linters = {
+      \   'python': ['flake8', 'pylint'],
+      \   'ruby': ['standardrb', 'rubocop'],
+      \   'javascript': ['eslint'],
+      \}
+
+" Make sure ale can fix on save
+let g:ale_fixers = {
+      \    'python': ['yapf'],
+      \}
+nmap <F10> :ALEFix<CR>
+let g:ale_fix_on_save = 1
+
+"new leader
+let mapleader = ","
+
+" command s for saving 
+" Works in normal mode, must press Esc first"
+
+:map <M-s> :w<kEnter>  
+
+" works in insert mode, saves and puts back in insert mode"
+:imap <m-s> <esc>:w<kenter>
+
+" access system clipboard
+set clipboard=unnamed
+
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+nnoremap <space> za 
+nnoremap <F5> :w <bar> :QuickRun<cr>
+
+" search down into subfolders
+set path+=**
+
+set path+=**
+set wildmenu
+
+nnoremap <Leader>r :source $MYVIMRC<CR>
+nnoremap <Leader>m :NERDTreeToggle<CR>
+nnoremap <Leader>t :NERDTreeFocus<CR>
+
+imap <F5> <Esc>:w<CR>:!clear;python %<CR>
+
+
+syntax on
+filetype plugin indent on
+
+" command s for saving 
+" Works in normal mode, must press Esc first"
+:map <M-s> :w<kEnter>  
+
+" works in insert mode, saves and puts back in insert mode"
+:imap <m-s> <esc>:w<kenter>
+
+" make backspce work like normal
+set backspace=indent,eol,start
+
+" " Enable folding
+" set foldmethod=indent
+" set foldlevel=99
+" nnoremap <space> za 
+
+" search down into subfolders
+set path+=**
+
+set path+=**
+set wildmenu
+
+" line numbering
+set nu
+nnoremap <Leader>r :source $MYVIMRC<CR>
+
+" code completion with deoplete
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_ignore_case = 1
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | silent! pclose | endif
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+let g:deoplete#sources#go = ['vim-go']
+let g:deoplete#sources#go#gocode_binary = '/dev/null'
+" call deoplete#custom#option('smart_case', v:true)
+" call deoplete#custom#option('omni_patterns', {
+\ 'go': '[^. *\t]\.\w*',
+\})
+
+" code help popup via echodoc
+let g:echodoc#enable_at_startup = 1
+let g:echodoc#type = 'floating'
+
+" vim-test settings
+nnoremap <Leader>tf :TestFile<cr>
+nnoremap <Leader>tn :TestNearest<cr>
+nnoremap <Leader>ts :TestSuite<cr>
+noremap <Leader>tl :w \| :TestLast<cr>
+
+
+" Copyright 2016 Google LLC
+"
+" Licensed under the Apache License, Version 2.0 (the "License");
+" you may not use this file except in compliance with the License.
+" You may obtain a copy of the License at
+"
+"      http://www.apache.org/licenses/LICENSE-2.0
+"
+" Unless required by applicable law or agreed to in writing, software
+" distributed under the License is distributed on an "AS IS" BASIS,
+" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+" See the License for the specific language governing permissions and
+" limitations under the License.
+
+" Generate boilerplate comments for new files.
+function! GenerateBoilerplate(filename)
+  " Modify this line as needed for your installation:
+  " * specify the full path to autogen
+  " * add flags as needed to set license, copyright holder, etc.
+  let gen = system("../autogen -s " . a:filename)
+  call append(0, split(gen, '\v\n'))
+endfunction
+
+" To use Autogen for all files (unknown file types silently ignored), use:
+autocmd! BufNewFile * call GenerateBoilerplate(expand('%'))
+
+" To use Autogen for specific file types, use this pattern instead:
+" autocmd! BufNewFile *.py,*.sh call GenerateBoilerplate(expand('%'))
+
+" Insert boilerplate comments at the top of current buffer.
+function! InsertBoilerplate()
+  call GenerateBoilerplate(bufname('%'))
+endfunction
+
+" Create a command "Autogen" for inserting text at top of current buffer:
+command! Autogen call InsertBoilerplate()
+
+" Alternatively, bind Ctrl-Shift-A to insert text at the top of the buffer:
+nnoremap <C-A> :call InsertBoilerplate()<CR>
